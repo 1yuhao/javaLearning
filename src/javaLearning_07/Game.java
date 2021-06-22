@@ -1,18 +1,49 @@
 package javaLearning_07;
 
+import javax.print.attribute.HashDocAttributeSet;
+import java.util.HashMap;
 import java.util.Scanner;
 
-public class Game
-{
+public class Game {
     private Room currentRoom;
+    private HashMap<String, Handler> handlers = new HashMap<String, Handler>();
 
-    public Game()
-    {
+
+    public Game() {
+        handlers.put("go", new HandlerGo(this));
+        handlers.put("bye", new HandlerBey(this));
+        handlers.put("help",new HandlerHelp(this));
         createRooms();
     }
 
-    public void createRooms()
-    {
+    public void play() {
+        Scanner in = new Scanner(System.in);
+        while (true) {
+            String line = in.nextLine();
+            String[] words = line.split(" ");
+            Handler handler = handlers.get(words[0]);
+            String value = "";
+            if (words.length > 1) {
+                value = words[1];
+            }
+            if (handler != null) {
+                handler.doCmd(value);
+                if (handler.isBey())
+                    break;
+            }else{
+                System.out.println("命令出错了，输入help查看一下吧！");
+            }
+//            } else if (words[0].equals("go")) {
+//                goRoom(words[1]);
+//            } else if (words[0].equals("bye")) {
+//                break;
+//            } else {
+//                System.out.println("命令不对，请查看help");
+        }
+        in.close();
+    }
+
+    public void createRooms() {
         Room outside, lobby, pub, study, bedroom;
 
         //	制造房间
@@ -31,14 +62,13 @@ public class Game
         study.setExit("north", outside);
         study.setExit("east", bedroom);
         bedroom.setExit("west", study);
-        lobby.setExit("up",pub);
-        pub.setExit("down",lobby);
+        lobby.setExit("up", pub);
+        pub.setExit("down", lobby);
 
         currentRoom = outside;  //	从城堡门外开始
     }
 
-    public void printWelcome()
-    {
+    public void printWelcome() {
         System.out.println();
         System.out.println("欢迎来到城堡！");
         System.out.println("这是一个超级无聊的游戏。");
@@ -49,27 +79,17 @@ public class Game
 
     // 以下为用户命令
 
-    public void printHelp()
-    {
-        System.out.print("迷路了吗？你可以做的命令有：go bye help");
-        System.out.println("如：\tgo east");
-    }
-
-    public void goRoom(String direction)
-    {
+    public void goRoom(String direction) {
         Room nextRoom = currentRoom.getExit(direction);
-        if (nextRoom == null)
-        {
+        if (nextRoom == null) {
             System.out.println("那里没有门！");
-        } else
-        {
+        } else {
             currentRoom = nextRoom;
             showPrompt();
         }
     }
 
-    public void showPrompt()
-    {
+    public void showPrompt() {
         System.out.println("你在" + currentRoom);
         System.out.print("出口有: ");
         System.out.println(currentRoom.getExitDesc());
