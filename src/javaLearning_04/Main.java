@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 
 public class Main {
-    public static void main(String[] arge) {
+    public static void main(String[] args) {
 //        NoteBook nb = new NoteBook();
 //        nb.add("first");
 //        nb.add("second");

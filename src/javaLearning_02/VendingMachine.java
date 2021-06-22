@@ -39,7 +39,7 @@ public class VendingMachine {
         }
     }
 
-    public static void main(String[] arge) {
+    public static void main(String[] args) {
         VendingMachine vm = new VendingMachine();
         vm.showPrompt();
         vm.insertMomey(100);
